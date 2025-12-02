@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { SpeedInsights } from "@vercel/speed-insights/react"
+import { Analytics } from "@vercel/analytics/react"
 import { useGameStore } from './store/useGameStore';
 import { Button } from './components/Button';
 import { Card } from './components/Card';
