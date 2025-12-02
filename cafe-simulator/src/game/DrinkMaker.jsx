@@ -54,13 +54,13 @@ export function DrinkMaker({ onClose, customerOrder }) {
                     <X size={24} />
                 </button>
 
-                <h2 className="text-2xl font-bold text-cafe-rose mb-2 font-serif text-center">Drink Station</h2>
-                <p className="text-center text-cafe-brown mb-6">Order: <span className="font-bold">{customerOrder.name}</span></p>
+                <h2 className="text-3xl font-bold text-cafe-rose mb-2 font-serif text-center drop-shadow-sm">Drink Station</h2>
+                <p className="text-center text-cafe-brown mb-8 text-lg">Order: <span className="font-bold text-xl">{customerOrder.name}</span></p>
 
                 <div className="flex gap-8">
                     {/* Ingredients Panel */}
-                    <div className="flex-1">
-                        <h3 className="font-bold text-cafe-brown mb-4">Ingredients</h3>
+                    <div className="flex-1 bg-white/30 p-4 rounded-2xl border border-white/40">
+                        <h3 className="font-bold text-cafe-brown mb-4 text-lg">Ingredients</h3>
                         <div className="grid grid-cols-3 gap-3">
                             {ingredientsList.map((ing) => (
                                 <motion.button
@@ -68,7 +68,7 @@ export function DrinkMaker({ onClose, customerOrder }) {
                                     whileHover={{ scale: 1.1 }}
                                     whileTap={{ scale: 0.9 }}
                                     onClick={() => handleAddIngredient(ing.id)}
-                                    className="bg-cafe-cream p-3 rounded-xl border border-rose-100 flex flex-col items-center gap-2 hover:border-cafe-rose transition-colors"
+                                    className="bg-white/60 p-3 rounded-xl border border-white/50 flex flex-col items-center gap-2 hover:bg-white hover:scale-105 transition-all shadow-sm"
                                     disabled={!!result}
                                 >
                                     <span className="text-2xl">{ing.icon}</span>
@@ -79,7 +79,7 @@ export function DrinkMaker({ onClose, customerOrder }) {
                     </div>
 
                     {/* Mixing Area */}
-                    <div className="flex-1 bg-cafe-pink/30 rounded-xl p-4 flex flex-col items-center justify-between border-2 border-dashed border-rose-200">
+                    <div className="flex-1 bg-cafe-pink/20 rounded-2xl p-6 flex flex-col items-center justify-between border border-white/40 backdrop-blur-sm shadow-inner">
                         <div className="w-full">
                             <h3 className="font-bold text-cafe-brown mb-4 text-center">Mixing Cup</h3>
                             <div className="flex flex-wrap gap-2 justify-center min-h-[100px]">

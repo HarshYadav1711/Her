@@ -10,35 +10,63 @@
 }
 
 :root {
-  /* Light Mode (Default) */
-  --cafe-pink: #fdf2f8;
-  --cafe-rose: #fb7185;
-  --cafe-gold: #fbbf24;
-  --cafe-brown: #78350f;
-  --cafe-cream: #fffbeb;
+  /* Light Mode (Cozy Day) */
+  --cafe-pink: #fff0f3;
+  /* Lighter, softer pink background */
+  --cafe-rose: #e11d48;
+  /* Deeper, more sophisticated rose */
+  --cafe-gold: #d97706;
+  /* Richer amber/gold */
+  --cafe-brown: #4a044e;
+  /* Deep plum/brown for text */
+  --cafe-cream: #fffdd0;
+  /* Classic cream */
 
-  --bg-primary: var(--cafe-pink);
-  --text-primary: var(--cafe-brown);
-  --card-bg: #ffffff;
-  --card-border: #fecdd3;
+  --bg-primary: #fff1f2;
+  /* Rose-50 */
+  --bg-gradient: linear-gradient(135deg, #fff1f2 0%, #fffdd0 100%);
+  --text-primary: #881337;
+  /* Rose-900 */
+  --card-bg: rgba(255, 255, 255, 0.7);
+  --card-border: rgba(255, 255, 255, 0.5);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
 }
 
 .dark {
-  /* Dark Mode */
-  --cafe-pink: #1f1f1f;
+  /* Dark Mode (Magical Night) */
+  --cafe-pink: #1e1b4b;
+  /* Deep indigo background */
   --cafe-rose: #f43f5e;
-  /* Slightly brighter rose for dark mode */
+  /* Glowing rose */
   --cafe-gold: #fbbf24;
-  --cafe-brown: #fdf2f8;
-  /* Invert brown to light pink/white */
-  --cafe-cream: #2d2d2d;
+  /* Bright gold stars */
+  --cafe-brown: #e0e7ff;
+  /* Soft indigo/white text */
+  --cafe-cream: #312e81;
+  /* Darker indigo for elements */
 
-  --bg-primary: #1f1f1f;
-  --text-primary: #fdf2f8;
-  --card-bg: #2d2d2d;
-  --card-border: #4b4b4b;
+  --bg-primary: #0f172a;
+  /* Slate-900 */
+  --bg-gradient: linear-gradient(135deg, #0f172a 0%, #312e81 100%);
+  --text-primary: #e0e7ff;
+  --card-bg: rgba(30, 41, 59, 0.7);
+  /* Slate-800 with opacity */
+  --card-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 }
 
 body {
-  @apply bg-cafe-pink text-cafe-brown transition-colors duration-300;
+  background: var(--bg-gradient);
+  color: var(--text-primary);
+  min-height: 100vh;
+  transition: color 0.3s ease;
+}
+
+/* Glassmorphism Utility Class */
+.glass-panel {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--glass-shadow);
 }

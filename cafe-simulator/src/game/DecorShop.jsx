@@ -28,7 +28,7 @@ export function DecorShop({ onClose }) {
                     {decorItems.map((item) => {
                         const isOwned = unlockedItems.includes(item.id);
                         return (
-                            <div key={item.id} className="border border-rose-100 p-4 rounded-xl flex items-center justify-between bg-cafe-cream">
+                            <div key={item.id} className="border border-white/40 p-4 rounded-xl flex items-center justify-between bg-white/40 backdrop-blur-sm hover:bg-white/60 transition-colors shadow-sm">
                                 <div className="flex items-center gap-3">
                                     <span className="text-3xl">{item.icon}</span>
                                     <div>

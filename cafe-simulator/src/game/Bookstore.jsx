@@ -30,7 +30,7 @@ export function Bookstore({ onClose }) {
                             type="text"
                             value={newBookTitle}
                             onChange={(e) => setNewBookTitle(e.target.value)}
-                            className="flex-1 px-3 py-2 rounded-lg border border-rose-200 focus:border-cafe-rose outline-none"
+                            className="flex-1 px-4 py-2 rounded-full border border-rose-200 focus:border-cafe-rose outline-none bg-white/50"
                             placeholder="Enter book title..."
                         />
                         <Button onClick={handleAddBook} disabled={!newBookTitle.trim()}>Add</Button>
@@ -40,7 +40,7 @@ export function Bookstore({ onClose }) {
                 <div className="space-y-2">
                     {books.length === 0 && <p className="text-center text-gray-400 italic">No books yet.</p>}
                     {books.map((book) => (
-                        <div key={book.id} className="flex items-center gap-3 p-3 bg-white rounded-lg border border-rose-50 shadow-sm">
+                        <div key={book.id} className="flex items-center gap-3 p-4 bg-white/60 rounded-xl border border-white/50 shadow-sm hover:scale-[1.02] transition-transform">
                             <Book size={20} className="text-cafe-rose" />
                             <span className="text-cafe-brown font-medium">{book.title}</span>
                         </div>

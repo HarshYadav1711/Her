@@ -57,15 +57,16 @@ function App() {
 
   if (!cafeName) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-cafe-pink p-4 font-sans">
-        <Card className="max-w-md w-full text-center space-y-6">
+      <div className="min-h-screen flex items-center justify-center p-4 font-sans">
+        <Card className="max-w-md w-full text-center space-y-8 p-10 backdrop-blur-xl">
+          <div className="text-6xl mb-4">☕</div>
           <h1 className="text-3xl font-bold text-cafe-rose font-serif">Welcome to Your Dream Café</h1>
           <p className="text-cafe-brown">What would you like to name your special place?</p>
           <input
             type="text"
             value={inputName}
             onChange={(e) => setInputName(e.target.value)}
-            className="w-full px-4 py-2 rounded-lg border-2 border-rose-200 focus:border-cafe-rose outline-none text-center text-lg bg-cafe-cream text-cafe-brown placeholder-rose-300"
+            className="w-full px-6 py-3 rounded-full border-2 border-rose-200 focus:border-cafe-rose outline-none text-center text-xl bg-white/50 text-cafe-brown placeholder-rose-300 transition-all focus:shadow-lg focus:scale-105"
             placeholder="e.g. Chai & Chapters"
           />
           <Button onClick={handleStart} disabled={!inputName.trim()} className="w-full">
@@ -77,8 +78,8 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-cafe-pink p-8 font-sans relative overflow-hidden">
-      <header className="flex justify-between items-center mb-8 relative z-10">
+    <div className="min-h-screen p-8 font-sans relative overflow-hidden">
+      <header className="flex justify-between items-center mb-12 sticky top-4 z-50 glass-panel px-8 py-4 rounded-full max-w-5xl mx-auto">
         <h1 className="text-2xl font-bold text-cafe-rose font-serif">{cafeName}</h1>
         <div className="flex gap-4">
           <span className="bg-white px-4 py-1 rounded-full shadow text-cafe-brown font-bold border border-rose-100">
@@ -93,8 +94,10 @@ function App() {
 
       <main className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
         <div className="md:col-span-2 space-y-8">
-          <Card className="h-96 flex items-center justify-center bg-cafe-cream border-2 border-dashed border-rose-200 relative overflow-hidden">
-            <p className="text-gray-400 absolute top-4 left-4">Café Interior</p>
+          <Card className="h-[500px] flex items-center justify-center bg-gradient-to-b from-cafe-cream to-rose-50 border-none relative overflow-hidden shadow-2xl group">
+            <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-cafe-rose to-transparent" />
+            <div className="absolute bottom-0 w-full h-32 bg-gradient-to-t from-black/5 to-transparent pointer-events-none" /> {/* Floor shadow */}
+            <p className="text-cafe-brown/30 absolute top-4 left-4 font-serif italic">Café Interior</p>
 
             {/* Placed Decor */}
             {unlockedItems.map((itemId, index) => {
