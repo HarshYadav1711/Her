@@ -1,16 +1,44 @@
-@import "tailwindcss";
-
 @theme {
-  --color-cafe-pink: #fdf2f8;
-  --color-cafe-rose: #fb7185;
-  --color-cafe-gold: #fbbf24;
-  --color-cafe-brown: #78350f;
-  --color-cafe-cream: #fffbeb;
+  --color-cafe-pink: var(--cafe-pink);
+  --color-cafe-rose: var(--cafe-rose);
+  --color-cafe-gold: var(--cafe-gold);
+  --color-cafe-brown: var(--cafe-brown);
+  --color-cafe-cream: var(--cafe-cream);
 
   --font-sans: Inter, sans-serif;
   --font-serif: Merriweather, serif;
 }
 
+:root {
+  /* Light Mode (Default) */
+  --cafe-pink: #fdf2f8;
+  --cafe-rose: #fb7185;
+  --cafe-gold: #fbbf24;
+  --cafe-brown: #78350f;
+  --cafe-cream: #fffbeb;
+
+  --bg-primary: var(--cafe-pink);
+  --text-primary: var(--cafe-brown);
+  --card-bg: #ffffff;
+  --card-border: #fecdd3;
+}
+
+.dark {
+  /* Dark Mode */
+  --cafe-pink: #1f1f1f;
+  --cafe-rose: #f43f5e;
+  /* Slightly brighter rose for dark mode */
+  --cafe-gold: #fbbf24;
+  --cafe-brown: #fdf2f8;
+  /* Invert brown to light pink/white */
+  --cafe-cream: #2d2d2d;
+
+  --bg-primary: #1f1f1f;
+  --text-primary: #fdf2f8;
+  --card-bg: #2d2d2d;
+  --card-border: #4b4b4b;
+}
+
 body {
-  @apply bg-cafe-pink text-cafe-brown;
+  @apply bg-cafe-pink text-cafe-brown transition-colors duration-300;
 }

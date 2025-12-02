@@ -1,0 +1,29 @@
+
+> cafe-simulator@0.0.0 lint
+> eslint .
+
+
+D:\Her\cafe-simulator\src\App.jsx
+  11:27  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                no-unused-vars
+  14:53  error  'placedDecor' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+D:\Her\cafe-simulator\src\components\Button.jsx
+  1:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+D:\Her\cafe-simulator\src\components\Card.jsx
+  1:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+D:\Her\cafe-simulator\src\components\ThemeToggle.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+D:\Her\cafe-simulator\src\context\ThemeContext.jsx
+  32:17  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\Her\cafe-simulator\src\game\DecorShop.jsx
+  6:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\Her\cafe-simulator\src\game\DrinkMaker.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+Γ£û 8 problems (8 errors, 0 warnings)
+

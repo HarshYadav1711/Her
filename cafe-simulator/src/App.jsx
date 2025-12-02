@@ -3,14 +3,17 @@ import { useState, useEffect } from 'react';
 import { useGameStore } from './store/useGameStore';
 import { Button } from './components/Button';
 import { Card } from './components/Card';
+import { ThemeToggle } from './components/ThemeToggle';
 import { DrinkMaker } from './game/DrinkMaker';
-import { DecorShop, decorItems } from './game/DecorShop';
+import { DecorShop } from './game/DecorShop';
+import { decorItems } from './game/data';
 import { Bookstore } from './game/Bookstore';
 import { recipes } from './game/recipes';
+// eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion } from 'framer-motion';
 
 function App() {
-  const { cafeName, setCafeName, money, reputation, placedDecor, unlockedItems } = useGameStore();
+  const { cafeName, setCafeName, money, reputation, unlockedItems } = useGameStore();
   const [inputName, setInputName] = useState('');
   const [isDrinkMakerOpen, setIsDrinkMakerOpen] = useState(false);
   const [isDecorShopOpen, setIsDecorShopOpen] = useState(false);
@@ -84,6 +87,7 @@ function App() {
           <span className="bg-white px-4 py-1 rounded-full shadow text-cafe-brown font-bold border border-rose-100">
             ⭐ {reputation}
           </span>
+          <ThemeToggle />
         </div>
       </header>
 
