@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cafe-pink: #fdf2f8;
+  --color-cafe-rose: #fb7185;
+  --color-cafe-gold: #fbbf24;
+  --color-cafe-brown: #78350f;
+  --color-cafe-cream: #fffbeb;
+
+  --font-sans: Inter, sans-serif;
+  --font-serif: Merriweather, serif;
+}
+
+body {
+  @apply bg-cafe-pink text-cafe-brown;
+}
