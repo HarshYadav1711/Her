@@ -1,16 +1,60 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import { ingredientsList, recipes } from './recipes';
 import { useGameStore } from '../store/useGameStore';
+import { StatBar } from '../components/StatBar';
 import { X } from 'lucide-react';
 
 export function DrinkMaker({ onClose, customerOrder }) {
     const [selectedIngredients, setSelectedIngredients] = useState([]);
     const [result, setResult] = useState(null);
-    const { addMoney, addReputation } = useGameStore();
+    const [timeLeft, setTimeLeft] = useState(30); // Battle timer
+    const [combo, setCombo] = useState(0);
+    const { 
+        addMoney, 
+        addReputation, 
+        addXP, 
+        useStamina, 
+        restoreStamina,
+        updateStats,
+        skills,
+        player
+    } = useGameStore();
+    
+    // Battle timer countdown
+    useEffect(() => {
+        if (result || timeLeft <= 0) return;
+        
+        const timer = setInterval(() => {
+            setTimeLeft(prev => {
+                if (prev <= 1) {
+                    handleTimeUp();
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+        
+        return () => clearInterval(timer);
+    }, [timeLeft, result]);
+    
+    // Restore stamina over time
+    useEffect(() => {
+        const staminaTimer = setInterval(() => {
+            restoreStamina(1);
+        }, 2000);
+        return () => clearInterval(staminaTimer);
+    }, [restoreStamina]);
+    
+    const handleTimeUp = () => {
+        setResult('timeout');
+        setTimeout(() => {
+            onClose(false);
+        }, 2000);
+    };
 
     const handleAddIngredient = (id) => {
         if (result) return;
@@ -18,6 +62,16 @@ export function DrinkMaker({ onClose, customerOrder }) {
     };
 
     const handleServe = () => {
+        if (player.stamina < 10) {
+            setResult('no_stamina');
+            setTimeout(() => {
+                onClose(false);
+            }, 2000);
+            return;
+        }
+        
+        useStamina(10);
+        
         // Basic recipe matching logic
         // Sort both arrays to ensure order doesn't matter
         const sortedSelected = [...selectedIngredients].sort();
@@ -29,11 +83,30 @@ export function DrinkMaker({ onClose, customerOrder }) {
         });
 
         if (match && match.id === customerOrder.id) {
+            // Calculate bonuses based on skills and time
+            const skillBonus = 1 + (skills.brewing * 0.05);
+            const timeBonus = timeLeft > 20 ? 1.2 : timeLeft > 10 ? 1.1 : 1.0;
+            const comboBonus = 1 + (combo * 0.1);
+            
+            const basePrice = match.price;
+            const finalPrice = Math.floor(basePrice * skillBonus * timeBonus * comboBonus);
+            const xpGain = Math.floor(10 * skillBonus);
+            const repGain = Math.floor(5 * (1 + skills.service * 0.1));
+            
             setResult('success');
-            addMoney(match.price);
-            addReputation(5);
+            setCombo(prev => prev + 1);
+            addMoney(finalPrice);
+            addReputation(repGain);
+            addXP(xpGain);
+            updateStats({ 
+                drinksServed: 1, 
+                perfectDrinks: 1,
+                customersServed: 1 
+            });
         } else {
             setResult('failure');
+            setCombo(0);
+            updateStats({ drinksServed: 1, customersServed: 1 });
         }
 
         // Auto close after delay
@@ -56,8 +129,8 @@ export function DrinkMaker({ onClose, customerOrder }) {
     }, {});
 
     return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 perspective-3d">
-            <Card className="w-full max-w-5xl relative max-h-[90vh] overflow-y-auto card-3d">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 perspective-3d">
+            <Card className="w-full max-w-5xl relative max-h-[90vh] overflow-y-auto card-3d battle-ui">
                 <button 
                     onClick={() => onClose(false)} 
                     className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10 button-3d"
@@ -65,13 +138,48 @@ export function DrinkMaker({ onClose, customerOrder }) {
                     <X size={24} />
                 </button>
 
-                <h2 className="text-3xl font-bold text-cafe-rose mb-2 font-serif text-center drop-shadow-sm layer-2">Drink Station</h2>
-                <p className="text-center text-cafe-brown mb-6 text-lg">
-                    Order: <span className="font-bold text-xl text-cafe-rose">{customerOrder.name}</span>
-                </p>
-                {customerOrder.description && (
-                    <p className="text-center text-gray-500 text-sm italic mb-6">{customerOrder.description}</p>
-                )}
+                <h2 className="text-3xl font-bold text-amber-400 mb-2 font-serif text-center drop-shadow-lg layer-2 battle-glow">
+                    ⚔️ BATTLE: Drink Making Challenge
+                </h2>
+                
+                {/* Battle Stats */}
+                <div className="grid grid-cols-3 gap-4 mb-4">
+                    <div className="p-3 bg-slate-800/50 rounded-lg border border-amber-500/30">
+                        <StatBar
+                            label="Time"
+                            current={timeLeft}
+                            max={30}
+                            color="bg-gradient-to-r from-red-500 to-orange-500"
+                            bgColor="bg-slate-700"
+                            icon="⏱️"
+                        />
+                    </div>
+                    <div className="p-3 bg-slate-800/50 rounded-lg border border-blue-500/30">
+                        <StatBar
+                            label="Stamina"
+                            current={player.stamina}
+                            max={player.maxStamina}
+                            color="bg-gradient-to-r from-blue-500 to-cyan-500"
+                            bgColor="bg-slate-700"
+                            icon="⚡"
+                        />
+                    </div>
+                    <div className="p-3 bg-slate-800/50 rounded-lg border border-purple-500/30">
+                        <div className="text-center">
+                            <div className="text-xs text-white/70 mb-1">Combo</div>
+                            <div className="text-2xl font-bold text-purple-400">{combo}x</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="text-center mb-4 p-3 bg-amber-900/30 rounded-lg border border-amber-500/50">
+                    <p className="text-amber-300 text-lg font-bold">
+                        Order: <span className="text-amber-400 text-xl">{customerOrder.name}</span>
+                    </p>
+                    {customerOrder.description && (
+                        <p className="text-amber-200/70 text-sm italic mt-1">{customerOrder.description}</p>
+                    )}
+                </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Ingredients Panel */}
@@ -160,18 +268,36 @@ export function DrinkMaker({ onClose, customerOrder }) {
                                 <motion.div 
                                     initial={{ scale: 0, rotateY: -180 }} 
                                     animate={{ scale: 1, rotateY: 0 }}
-                                    className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 p-3 rounded-xl text-center font-bold border-2 border-green-300 shadow-lg element-3d"
+                                    className="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-4 rounded-xl text-center font-bold border-2 border-green-300 shadow-lg element-3d"
                                 >
-                                    ✨ Perfect! +${recipes.find(r => r.id === customerOrder.id)?.price} & +5 Reputation
+                                    ✨ VICTORY! Perfect Drink! +XP & Bonus Rewards!
                                 </motion.div>
                             )}
                             {result === 'failure' && (
                                 <motion.div 
                                     initial={{ scale: 0, rotateX: -180 }} 
                                     animate={{ scale: 1, rotateX: 0 }}
-                                    className="bg-gradient-to-r from-red-100 to-rose-100 text-red-800 p-3 rounded-xl text-center font-bold border-2 border-red-300 shadow-lg element-3d"
+                                    className="bg-gradient-to-r from-red-500 to-rose-500 text-white p-4 rounded-xl text-center font-bold border-2 border-red-300 shadow-lg element-3d"
                                 >
-                                    ❌ Oops! Wrong recipe. Try again!
+                                    ❌ DEFEAT! Wrong recipe. Customer left disappointed.
+                                </motion.div>
+                            )}
+                            {result === 'timeout' && (
+                                <motion.div 
+                                    initial={{ scale: 0 }} 
+                                    animate={{ scale: 1 }}
+                                    className="bg-gradient-to-r from-gray-500 to-slate-500 text-white p-4 rounded-xl text-center font-bold border-2 border-gray-300 shadow-lg element-3d"
+                                >
+                                    ⏰ TIME'S UP! Customer left due to wait time.
+                                </motion.div>
+                            )}
+                            {result === 'no_stamina' && (
+                                <motion.div 
+                                    initial={{ scale: 0 }} 
+                                    animate={{ scale: 1 }}
+                                    className="bg-gradient-to-r from-orange-500 to-amber-500 text-white p-4 rounded-xl text-center font-bold border-2 border-orange-300 shadow-lg element-3d"
+                                >
+                                    ⚡ OUT OF STAMINA! Rest and try again.
                                 </motion.div>
                             )}
 

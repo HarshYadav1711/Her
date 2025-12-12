@@ -6,21 +6,52 @@ import { useGameStore } from './store/useGameStore';
 import { Button } from './components/Button';
 import { Card } from './components/Card';
 import { ThemeToggle } from './components/ThemeToggle';
+import { StatBar } from './components/StatBar';
+import { PlayerStats } from './components/PlayerStats';
+import { QuestPanel } from './components/QuestPanel';
+import { SkillTree } from './components/SkillTree';
 import { DrinkMaker } from './game/DrinkMaker';
 import { DecorShop } from './game/DecorShop';
 import { decorItems } from './game/data';
 import { Bookstore } from './game/Bookstore';
 import { recipes } from './game/recipes';
+import { initialQuests, generateDailyQuests } from './game/quests';
 // eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion } from 'framer-motion';
 
 function App() {
-  const { cafeName, setCafeName, money, reputation, unlockedItems } = useGameStore();
+  const { 
+    cafeName, 
+    setCafeName, 
+    money, 
+    reputation, 
+    unlockedItems,
+    player,
+    quests,
+    addQuest
+  } = useGameStore();
   const [inputName, setInputName] = useState('');
   const [isDrinkMakerOpen, setIsDrinkMakerOpen] = useState(false);
   const [isDecorShopOpen, setIsDecorShopOpen] = useState(false);
   const [isBookstoreOpen, setIsBookstoreOpen] = useState(false);
+  const [isPlayerStatsOpen, setIsPlayerStatsOpen] = useState(false);
+  const [isQuestPanelOpen, setIsQuestPanelOpen] = useState(false);
+  const [isSkillTreeOpen, setIsSkillTreeOpen] = useState(false);
   const [currentCustomer, setCurrentCustomer] = useState(null);
+  
+  // Initialize quests on game start
+  useEffect(() => {
+    if (cafeName && quests.active.length === 0 && quests.daily.length === 0) {
+      // Add initial story quest
+      const welcomeQuest = initialQuests.find(q => q.id === 'welcome');
+      if (welcomeQuest) {
+        addQuest(welcomeQuest);
+      }
+      // Generate daily quests
+      const daily = generateDailyQuests();
+      daily.forEach(q => addQuest(q));
+    }
+  }, [cafeName, quests, addQuest]);
 
   // Simulate customer arrival
   useEffect(() => {
@@ -95,28 +126,78 @@ function App() {
 
   return (
     <div className="min-h-screen p-8 font-sans relative overflow-hidden">
-      <header className="flex justify-between items-center mb-12 sticky top-4 z-50 glass-panel px-8 py-4 rounded-full max-w-5xl mx-auto card-3d">
-        <h1 className="text-2xl font-bold text-cafe-rose font-serif layer-2">{cafeName}</h1>
-        <div className="flex gap-4">
-          <motion.span 
-            className="bg-white px-4 py-2 rounded-full shadow-lg text-cafe-brown font-bold border-2 border-rose-100 button-3d"
-            whileHover={{ scale: 1.05, translateZ: 10 }}
-          >
-            💰 {money}
-          </motion.span>
-          <motion.span 
-            className="bg-white px-4 py-2 rounded-full shadow-lg text-cafe-brown font-bold border-2 border-rose-100 button-3d"
-            whileHover={{ scale: 1.05, translateZ: 10 }}
-          >
-            ⭐ {reputation}
-          </motion.span>
-          <ThemeToggle />
+      <header className="flex flex-col gap-4 mb-8 sticky top-4 z-50">
+        {/* Main Header */}
+        <div className="glass-panel px-8 py-4 rounded-2xl max-w-5xl mx-auto card-3d jrpg-menu">
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-amber-400 font-serif layer-2 drop-shadow-lg">{cafeName}</h1>
+            <div className="flex gap-3">
+              <motion.button
+                onClick={() => setIsPlayerStatsOpen(true)}
+                className="bg-slate-800/80 px-4 py-2 rounded-lg text-white font-bold border-2 border-amber-500/50 button-3d hover:border-amber-400"
+                whileHover={{ scale: 1.05 }}
+              >
+                ⚔️ Stats
+              </motion.button>
+              <motion.button
+                onClick={() => setIsQuestPanelOpen(true)}
+                className="bg-slate-800/80 px-4 py-2 rounded-lg text-white font-bold border-2 border-purple-500/50 button-3d hover:border-purple-400 relative"
+                whileHover={{ scale: 1.05 }}
+              >
+                📜 Quests
+                {quests.active.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {quests.active.length}
+                  </span>
+                )}
+              </motion.button>
+              <motion.button
+                onClick={() => setIsSkillTreeOpen(true)}
+                className="bg-slate-800/80 px-4 py-2 rounded-lg text-white font-bold border-2 border-violet-500/50 button-3d hover:border-violet-400"
+                whileHover={{ scale: 1.05 }}
+              >
+                🌳 Skills
+              </motion.button>
+              <ThemeToggle />
+            </div>
+          </div>
+        </div>
+        
+        {/* RPG Stats Bar */}
+        <div className="glass-panel px-8 py-3 rounded-2xl max-w-5xl mx-auto card-3d jrpg-menu">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-amber-400 font-bold">💰</span>
+              <span className="text-white font-bold">{money}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-yellow-400 font-bold">⭐</span>
+              <span className="text-white font-bold">{reputation}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-blue-400 font-bold">⚡</span>
+              <span className="text-white font-bold">{player.stamina}/{player.maxStamina}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-purple-400 font-bold">Lv.{player.level}</span>
+              <div className="flex-1 min-w-[60px]">
+                <StatBar
+                  label=""
+                  current={player.xp}
+                  max={player.maxXP}
+                  color="bg-gradient-to-r from-purple-500 to-pink-500"
+                  bgColor="bg-slate-700"
+                  showNumbers={false}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </header>
 
       <main className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10 perspective-3d">
         <div className="md:col-span-2 space-y-8">
-          <Card className="h-[500px] flex items-center justify-center bg-gradient-to-b from-cafe-cream to-rose-50 border-none relative overflow-hidden shadow-2xl group scene-3d">
+          <Card className="h-[500px] flex items-center justify-center bg-gradient-to-b from-cafe-cream to-rose-50 border-none relative overflow-hidden shadow-2xl group scene-3d jrpg-menu">
             {/* 3D Background Layers */}
             <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-cafe-rose to-transparent layer-1" />
             <div className="absolute bottom-0 w-full h-32 bg-gradient-to-t from-black/10 to-transparent pointer-events-none floor-3d" />
@@ -195,30 +276,31 @@ function App() {
         </div>
 
         <div className="space-y-4">
-          <Card className="card-3d">
-            <h2 className="text-xl font-bold text-cafe-brown mb-4 font-serif layer-2">Actions</h2>
+          <Card className="card-3d jrpg-menu">
+            <h2 className="text-xl font-bold text-amber-400 mb-4 font-serif layer-2 drop-shadow">⚔️ Actions</h2>
             <div className="space-y-2">
               <Button
                 variant="secondary"
-                className="w-full justify-start button-3d"
+                className="w-full justify-start button-3d jrpg-menu-item"
                 onClick={() => setIsDrinkMakerOpen(true)}
-                disabled={!currentCustomer}
+                disabled={!currentCustomer || player.stamina < 10}
               >
-                Make Drink {currentCustomer && '(!)'}
+                {currentCustomer ? '⚔️ Make Drink (!)' : '⚔️ Make Drink'}
+                {player.stamina < 10 && <span className="ml-auto text-xs">(Low Stamina)</span>}
               </Button>
               <Button
                 variant="outline"
-                className="w-full justify-start button-3d"
+                className="w-full justify-start button-3d jrpg-menu-item"
                 onClick={() => setIsDecorShopOpen(true)}
               >
-                Decor Shop
+                🏪 Decor Shop
               </Button>
               <Button
                 variant="outline"
-                className="w-full justify-start button-3d"
+                className="w-full justify-start button-3d jrpg-menu-item"
                 onClick={() => setIsBookstoreOpen(true)}
               >
-                Bookstore Corner
+                📚 Bookstore Corner
               </Button>
             </div>
           </Card>
@@ -237,6 +319,15 @@ function App() {
         )}
         {isBookstoreOpen && (
           <Bookstore onClose={() => setIsBookstoreOpen(false)} />
+        )}
+        {isPlayerStatsOpen && (
+          <PlayerStats onClose={() => setIsPlayerStatsOpen(false)} />
+        )}
+        {isQuestPanelOpen && (
+          <QuestPanel onClose={() => setIsQuestPanelOpen(false)} />
+        )}
+        {isSkillTreeOpen && (
+          <SkillTree onClose={() => setIsSkillTreeOpen(false)} />
         )}
       </AnimatePresence>
     </div>
