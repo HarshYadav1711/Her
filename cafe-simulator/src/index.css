@@ -70,3 +70,129 @@ body {
   border: 1px solid var(--card-border);
   box-shadow: var(--glass-shadow);
 }
+
+/* 3D Perspective Container */
+.perspective-3d {
+  perspective: 1200px;
+  perspective-origin: center center;
+  transform-style: preserve-3d;
+}
+
+/* 3D Card Transform */
+.card-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease;
+}
+
+.card-3d:hover {
+  transform: translateZ(20px) rotateX(2deg) rotateY(2deg);
+}
+
+/* 3D Interior Scene */
+.scene-3d {
+  perspective: 2000px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+
+/* 3D Floor */
+.floor-3d {
+  transform: rotateX(90deg) translateZ(-100px) scale(2);
+  transform-origin: center center;
+  transform-style: preserve-3d;
+}
+
+/* 3D Element */
+.element-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease;
+}
+
+.element-3d:hover {
+  transform: translateZ(30px) scale(1.1);
+}
+
+/* 3D Button */
+.button-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.button-3d:hover {
+  transform: translateY(-2px) translateZ(10px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.button-3d:active {
+  transform: translateY(0) translateZ(5px);
+}
+
+/* 3D Ingredient Card */
+.ingredient-3d {
+  transform-style: preserve-3d;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ingredient-3d:hover {
+  transform: translateZ(25px) rotateY(5deg) scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 0 20px rgba(225, 29, 72, 0.3);
+}
+
+/* 3D Drink Cup */
+.drink-cup-3d {
+  transform-style: preserve-3d;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateZ(0) rotateY(0deg);
+  }
+  50% {
+    transform: translateY(-10px) translateZ(10px) rotateY(5deg);
+  }
+}
+
+/* 3D Customer */
+.customer-3d {
+  transform-style: preserve-3d;
+  animation: customerIdle 4s ease-in-out infinite;
+}
+
+@keyframes customerIdle {
+  0%, 100% {
+    transform: translateY(0) translateZ(0);
+  }
+  50% {
+    transform: translateY(-5px) translateZ(5px);
+  }
+}
+
+/* 3D Decor Item */
+.decor-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.decor-3d:hover {
+  transform: translateZ(40px) rotateY(10deg) scale(1.15);
+}
+
+/* Depth Layers */
+.layer-1 {
+  transform: translateZ(0);
+}
+
+.layer-2 {
+  transform: translateZ(20px);
+}
+
+.layer-3 {
+  transform: translateZ(40px);
+}
+
+.layer-4 {
+  transform: translateZ(60px);
+}

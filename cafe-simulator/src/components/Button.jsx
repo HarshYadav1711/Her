@@ -12,9 +12,9 @@ export function Button({ children, className, onClick, variant = 'primary', disa
 
     return (
         <motion.button
-            whileHover={disabled ? {} : { scale: 1.05 }}
-            whileTap={disabled ? {} : { scale: 0.95 }}
-            className={twMerge(baseStyles, variants[variant], className)}
+            whileHover={disabled ? {} : { scale: 1.05, translateZ: 10 }}
+            whileTap={disabled ? {} : { scale: 0.95, translateZ: 5 }}
+            className={twMerge(baseStyles, variants[variant], "button-3d", className)}
             onClick={onClick}
             disabled={disabled}
             {...props}
